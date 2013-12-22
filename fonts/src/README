@@ -1,0 +1,9 @@
+use:
+
+font to pic.bmp (to edit with gimp):
+
+./mksm from | ./smtobmp > pic.bmp
+
+pic.bmp to font:
+
+./bmptosm pic.bmp | ./smtofont > font.blabla
