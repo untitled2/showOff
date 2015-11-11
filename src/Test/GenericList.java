@@ -69,7 +69,7 @@ public class GenericList<E> implements Iterable<E>, Iterator<E>
         final E data;
         Node<E> prev, next;
         
-        public Node(E element, Node<E> prev) {
+        private Node(E element, Node<E> prev) {
             data = element;
             this.prev = prev;
         }
