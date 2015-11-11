@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
  */
 public class GenericList<E> implements Iterable<E>, Iterator<E>
 {
-    private Node<E> head, tail, next, lastReturned;
+    private Node head, tail, next, lastReturned;
     public long size, count;
     
     public GenericList() {
@@ -28,7 +28,7 @@ public class GenericList<E> implements Iterable<E>, Iterator<E>
             head = tail = new Node(data, null);
         }
         else {
-            Node<E> curr = new Node(data, tail);
+            Node curr = new Node(data, tail);
             tail.next = curr;
             tail = curr;
         }
@@ -64,12 +64,12 @@ public class GenericList<E> implements Iterable<E>, Iterator<E>
         return lastReturned.data;
     }
     
-    private static class Node<E>
+    private class Node
     {
         final E data;
-        Node<E> prev, next;
+        Node prev, next;
         
-        private Node(E element, Node<E> prev) {
+        private Node(E element, Node prev) {
             data = element;
             this.prev = prev;
         }
