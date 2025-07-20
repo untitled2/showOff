@@ -1,0 +1,220 @@
+git init						// init repo
+git ls-files					// list files in the repo
+
+git diff --staged				// what will be commited (after git add)
+git --dry-run					// pretend to do things
+git commit -a					// does git add . for you; doesn't affect new files
+git commit --amend				// edit the last commit message
+
+git log -1						// show 1 last commit
+git log --stat (file)			// show log commited files
+git log --patch					// show patches
+git log --patch-with-stat		// two previous combined
+git log --parents (--abbrev-commit) // show parent commits
+git log --oneline				// log with one line per commit
+git log --shortstat --oneline	// compact log with # of commited files
+git log --reverse				// reverse order
+git log -n 3					// only last 3 commits
+git log --date=relative			// how many days/hours ago the commit was made
+
+git --no-pager log				// no pager
+git log file.txt [file2 file3]	// show only this file's history
+git log --grep=change			// grep with 'change' word in commit messages
+git log --since 07/19/2022 --until 07/20/2022
+git shortlog -e					// show authors with email
+git log --author="Niko"			// grep authors commits
+git log --author="gmail.com"	// grep commits from gmail
+git log --stat HEAD^..HEAD		// show which files changed between head-1 and head commits
+git log --patch HEAD^..HEAD		// what changed in the files
+git log --oneline master..new_feature // log between master and my branch
+git log --patch-with-stat
+git log --patch HEAD^..HEAD -- file1 // limit output to only this file
+git log branchName				// show log for this branch
+git log SHA1 -n 1				// show specific commit
+git name-rev SHA1				// name for a commit
+git branch --contains SHA1		// which branch contains the commit
+
+git grep change					// grep 'change' in files thru history
+
+git notes add			 		// add a note to a commit
+
+git add -p						// pick parts of your changes to add to the staging area
+git restore --staged file		// remove any changes added with git add
+git checkout file				// check out latest commited version of the file
+
+git rev-parse HEAD				// translate branch name info SHA1
+
+// tags
+git tag four_files -m "The commit with four files" 67b48e6
+git tag -a two_back -m "Two behind the HEAD" HEAD^^ // create annotated tag two commits behind HEAD
+git tag							// show tags
+git show four_files				// show detailed info about the tag
+git checkout four_files			// checkout the tagged commit
+git rag -d four_files			// remove tag
+
+// branches
+git branch [--column]			// show all branches
+git branch dev [master]			// create new branch 'dev' [from master]
+git checkout/switch dev			// switch to 'dev' branch
+git checkout -b dev	[master]	// create 'dev' branch [from master] and switch to it
+git branch -d master			// delete 'master' branch
+git config --global alias.lol "log --graph --decorate --oneline --all --abbrev-commit"
+git branch -v					// show SHA1 ID of the tips of branches
+git checkout -b 'name' 'sha1'	// recreate branch after deletion
+git reflog						// record of all branch moves
+
+git stash						// tmp stash current changes, so can switch branches
+git stash list					// list of what you stashed
+git stash pop					// pop out your stash
+
+// merging
+git switch master				// switch to branch to which to merge
+git merge bugfix				// branch which to merge
+git merge --abort				// abandon merge before it's done
+
+git config --global merge.tool vimdiff
+git config --global merge.conflictstyle diff3
+git config --global mergetool.prompt false
+
+git diff master...bugfix		// show diff between branches; preview of what merge will do
+git diff --name-status master...bugfix // show files to be merged
+git mergetool					// start merging
+___________________
+vimdiff:
+Ctrl+w, j			// move cursor to merge conflict area; ctrl+w, w to jump between areas
+:diffget RE/BA/LO	// get from REmote, BAse or LOcal
+-------------------
+git commit
+
+git merge --no-ff				// Prevent a fast-forward merge by creating a merge commit with message.
+								// This preserves the history of the merge.
+
+// cloning
+git branch -a					// show all branches, remote also
+git clone --bare math math.git	// create a bare dir clone
+git clone math.git math.clone	// create a clone
+git ls-tree HEAD				// show files
+git clone --depth 3 file:///Users/niko/git_learn/math math.clone6 // only last 3 commits
+// only one commit for all the branches
+git clone --no-single-branch --depth 1 file:///Users/niko/git_learn/math math.clone7
+
+// remotes
+git remote						// show remotes
+git remove -v show				// show remotes in detail
+git remote rename origin beginning // rename 'origin' to 'beginning' (only locally)
+git remote add bob ../math.bob	// add a remote
+git remote remove bob			// remove a remote
+git ls-remote					// list of branches and tags of the original remote
+git ls-remote origin			// list of branches and tags of a named remote
+git ls-remote .					// compare to local
+git remote set-url				// change remote url
+
+// pushing
+git push origin master			// push to 'remote' and 'branch'
+git ls-remote origin			// verify SHA1 IDs of local and remote
+git remote -v show origin		// show if local is out of date or in sync with remote
+
+git checkout -b new_branch master // create new_branch from master
+git push --set-upstream origin new_branch // push new branch to origin
+
+// delete remote branch
+git switch master
+git branch -d new_branch
+git ls-remote origin
+git push origin :new_branch
+
+// pushing tags
+git tag -a two_back -m "Two behind the HEAD" HEAD^^ // create tag 2 commits back from HEAD
+git push origin two_back		// push the tag
+git push --tags					// push all tags you created
+git tag -d two_back				// delete tag locally
+git push origin :two_back		// delete tag remotely
+git ls-remote					// verify
+
+// pulling
+git pull:						// consists of two commands
+	git fetch					// get the changes from origin
+		git rev-parse FETCH_HEAD	// and
+		git rev-parse origin/master	// should be the same
+		git diff HEAD..FETCH_HEAD	// show diff between local and origin
+	git merge FETCH_HEAD		// merge them with local; FETCH_HEAD is a reference to remote branch that was fetched
+
+// if modified the same file
+git pull
+resolve merge conflicts
+git add file
+git commit
+git push
+
+git pull --ff-only				// only allow merge if FETCH_HEAD is a descendant of current branch
+
+
+// rebase
+
+// 1. move branch to newest parent in master
+git checkout new_feature		// change branch
+git log --oneline master..new_feature // show log between master and my branch
+git rebase master				// do rebase
+git log --oneline master..new_feature // commits now have new SHA1 IDs
+// if you want to revert rebase
+git reflog
+git reset --hard HEAD@{4}
+git log --oneline master..new_feature // commits now have SHA1 IDs like before rebase
+
+// 2. clean up history (and move branch to newest parent in master
+git checkout new_feature
+git rebase -i master
+git log -n #
+
+
+// Workflows
+// 1. git-flow: https://nvie.com/posts/a-successful-git-branching-model/
+mkdir nvie
+cd nvie
+git init
+git commit --allow-empty -m "Initial commit" // must contain initial commit before can create branch
+git branch develop
+git checkout -b feature/sum develop
+// add and commit things
+git switch develop
+git merge --no-ff feature/sum
+git branch -d feature/sum
+
+// creating a release
+git checkout -b release-1.0 develop
+// add stuff
+git commit -am "Bumping to version 1.0"
+git switch master
+git merge --no-ff release-1.0
+git tag -a V1.0 -m "Release 1.0"
+git checkout develop
+git merge --no-ff release-1.0
+git branch -d release-1.0
+
+// 2. GitHub-flow: https://scottchacon.com/2011/08/31/github-flow.html
+mkdir gh-flow
+cd gh-flow
+git init
+git commit --allow-empty -m "Initial commit"
+git checkout -b sum_program
+// add and commit things
+git switch master
+git merge (--no-ff) sum_program
+
+// github
+git remote add origin https://github.com/nastonen/math.git	// add github repo to remotes
+git push -u origin master									// push master to remote
+git clone https://github.com/nastonen/math.git				// clone from github
+
+
+// config
+git config --local --list				// local means local for repository
+git config --global --list				// global for all repos
+git config --system --list				// server-wide
+git -c log.date=relative log -n 2		// create tmp conf
+git config --local log.date relative	// create permanent conf
+git config --local --unset log.date		// drop the conf
+.git/config								// confg file
+git -c core.editor=vim config --global --edit // set default editor
+git help gitignore						// ignore things
+.git/info/exclude
