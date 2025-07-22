@@ -6,6 +6,7 @@ set autoindent
 set smartindent
 set tabstop=8        " tab width is 8 spaces
 set shiftwidth=8     " indent also with 8 spaces
+set expandtab
 set comments=sl:/*,mb:\ *,elx:\ */
 
 " 80 characters line
